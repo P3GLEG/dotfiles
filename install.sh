@@ -26,3 +26,5 @@ dconf write /org/gnome/desktop/interface/font-name "'Hack 11'"
 dconf write /org/gnome/desktop/interface/monospace-font-name "'Hack 11'"
 dconf write /org/gnome/desktop/interface/document-font-name "'Hack 11'"
 dconf write /org/gnome/nautilus/desktop/font "'Hack 11'"
+
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
