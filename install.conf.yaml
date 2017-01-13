@@ -5,9 +5,5 @@
     ~/.bashrc: bashrc
     ~/.vimrc: vimrc
     ~/.zshrc: zshrc
-- shell:
-    - apt-get install screen tmux git hg svn bzr fossil acpi
-    - git clone https://github.com/nojhan/liquidprompt.git /opt/liquidprompt
-
-
+    ~/.tmux.conf:  tmux
 
