@@ -1,5 +1,7 @@
 apt-get install zsh tmux fonts-hack-ttf
+chsh -s /bin/zsh
 sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+#Created at terminal.sexy
 ./terminaltheme.sh
 git clone git://github.com/amix/vimrc.git ~/.vim_runtime
 ln -s $(pwd)/zshrc ~/.zshrc
