@@ -42,4 +42,8 @@ ln -sf $(pwd)/vimrc ~/.vimrc
 ln -sf $(pwd)/tmux.conf ~/.tmux.conf
 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+
+mkdir -p ~/.cache/zsh/
 chsh -s /bin/zsh
