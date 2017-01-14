@@ -6,6 +6,11 @@ if [ $(uname) == "Darwin" ]; then
 	pip install --user powerline-status
 	wget https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
 	mv PowerlineSymbols.otf /Library/Fonts/
+    wget https://github.com/chrissimpkins/Hack/releases/download/v2.020/Hack-v2_020-ttf.zip
+    unzip Hack-v2_020-ttf.zip
+    mv *.tff /Library/Fonts/
+    rm *.tff
+    rm Hack-v2_020-ttf.zip
 else 
 	apt-get install zsh tmux fonts-hack-ttf vim
 	#Created at terminal.sexy
