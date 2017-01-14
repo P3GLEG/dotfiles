@@ -1,7 +1,7 @@
 if [ $(uname) == "Darwin" ]; then
 	echo "Mac detected"
 	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-	brew install python wget tmux
+	brew install python wget tmux 
 	brew install vim --with-python --with-ruby --with-perl
 	pip install --user powerline-status
 	wget https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
@@ -12,7 +12,7 @@ if [ $(uname) == "Darwin" ]; then
     rm *.tff
     rm Hack-v2_020-ttf.zip
 else 
-	apt-get install zsh tmux fonts-hack-ttf vim
+	apt-get install zsh tmux fonts-hack-ttf vim xclip
 	#Created at terminal.sexy
 	./terminaltheme.sh
 	wget https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
@@ -27,6 +27,7 @@ else
 	dconf write /org/gnome/desktop/interface/monospace-font-name "'Hack 11'"
 	dconf write /org/gnome/desktop/interface/document-font-name "'Hack 11'"
 	dconf write /org/gnome/nautilus/desktop/font "'Hack 11'"
+    echo 'bind -t vi-copy y copy-pipe "xclip -sel clip -i"' >> $(pwd)/tmux.conf
 fi
 
 git clone git://github.com/amix/vimrc.git ~/.vim_runtime
