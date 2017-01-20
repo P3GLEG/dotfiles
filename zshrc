@@ -1,7 +1,7 @@
 export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="xiong-chiamiov"
 alias nuke-docker='docker rm -v $(docker ps -a -q -f status=exited) && docker rmi $(docker images -f "dangling=true" -q)'
-plugins=(git zsh-syntax-highlighting docker docker-compose)
+plugins=(git zsh-syntax-highlighting docker docker-compose heroku)
 source $ZSH/oh-my-zsh.sh
 
 ##Dirstack dirs -v
