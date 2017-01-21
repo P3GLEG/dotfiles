@@ -1,3 +1,8 @@
+#!/bin/bash
+MYZSHTHEME="xiong-chiamiov"
+ROOTZSHTHEME="bira"
+
+
 if [ $(uname) == "Darwin" ]; then
 	echo "Mac detected"
 	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -52,3 +57,5 @@ curl https://gist.githubusercontent.com/0x3333/2bad186dd9c0f045c0d0/raw/1ebc2fd2
 
 mkdir -p ~/.cache/zsh/
 chsh -s /bin/zsh
+sudo sed -ie "s/${MYZSHTHEME}/${ROOTZSHTHEME}/g" /root/.zshrc
+
