@@ -1,5 +1,11 @@
 export ZSH=$HOME/.oh-my-zsh
-ZSH_THEME="xiong-chiamiov"
+MYZSHTHEME="xiong-chiamiov"
+ROOTZSHTHEME="bira"
+if [ "$(id -u)" -eq "0" ]; then
+   ZSH_THEME=$ROOTZSHTHEME
+else
+   ZSH_THEME=$MYZSHTHEME
+fi
 plugins=(git zsh-syntax-highlighting docker docker-compose heroku colrize\
     colored-man-pages command-not-found aws common-aliases encode64 jsontools sudo ccze)
 source $ZSH/oh-my-zsh.sh
