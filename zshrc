@@ -1,7 +1,7 @@
 export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="xiong-chiamiov"
-alias nuke-docker='docker rm -v $(docker ps -a -q -f status=exited) && docker rmi $(docker images -f "dangling=true" -q)'
-plugins=(git zsh-syntax-highlighting docker docker-compose heroku)
+plugins=(git zsh-syntax-highlighting docker docker-compose heroku colrize\
+    colored-man-pages command-not-found aws common-aliases encode64 jsontools sudo ccze)
 source $ZSH/oh-my-zsh.sh
 
 ##Dirstack dirs -v
@@ -22,3 +22,9 @@ setopt PUSHD_MINUS
 
 #Persistent rehash
 zstyle ':completion:*' rehash true
+
+export BROWSER="chromium"
+export EDITOR="vim"
+
+
+alias nuke-docker='docker rm -v $(docker ps -a -q -f status=exited) && docker rmi $(docker images -f "dangling=true" -q)'

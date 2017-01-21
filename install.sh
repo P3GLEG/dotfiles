@@ -47,6 +47,8 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 git clone https://github.com/ekalinin/Dockerfile.vim.git ~/.vim_runtime/sources_non_forked/dockerautocomplete
 
+mkdir -p ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/ccze
+curl https://gist.githubusercontent.com/0x3333/2bad186dd9c0f045c0d0/raw/1ebc2fd2d6f762251723ab42f0b57cf333e9c692/ccze.plugin.zsh > ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/ccze/ccze.plugin.zsh
 
 mkdir -p ~/.cache/zsh/
 chsh -s /bin/zsh
