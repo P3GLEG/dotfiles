@@ -11,6 +11,8 @@ if [ $(uname) == "Darwin" ]; then
     mv *.tff /Library/Fonts/
     rm *.tff
     rm Hack-v2_020-ttf.zip
+elif [ -f "/etc/arch-release" ]; then
+	sudo pacman -S zsh tmux ttf-hack powerline python-pip powerline-common wget
 else 
 	apt-get install zsh tmux fonts-hack-ttf vim xclip
 	#Created at terminal.sexy
