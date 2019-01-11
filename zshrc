@@ -40,8 +40,7 @@ export GOPATH=$HOME/workspace/go
 export GOROOT=/usr/local/opt/go/libexec
 export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:$GOROOT/bin
-export PATH=$PATH:/Users/pegleg/anaconda3/bin
-. /Users/pegleg/anaconda3/etc/profile.d/conda.sh
-export PATH=/usr/local/anaconda3/bin:"$PATH"
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
+export PATH="/usr/local/opt/python/libexec/bin:$PATH"
+(cat ~/.cache/wal/sequences &)
