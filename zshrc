@@ -44,3 +44,4 @@ else
 fi
 unset __conda_setup
 
+alias vim=nvim
