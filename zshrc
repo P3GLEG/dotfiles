@@ -52,7 +52,7 @@ SPACESHIP_PROMPT_FIRST_PREFIX_SHOW="true"
 #SPACESHIP_CHAR_SYMBOL_SECONDARY="\ue62d"
 alias ls="colorls --light --sort-dirs"
 alias lc="colorls --tree --light"
-plugins=(git zsh-syntax-highlighting zsh-autosuggestions docker docker-compose heroku colored-man-pages command-not-found aws common-aliases encode64 jsontools sudo gitfast )
+plugins=(git zsh-syntax-highlighting zsh-autosuggestions docker docker-compose heroku colored-man-pages command-not-found aws common-aliases encode64 jsontools sudo httpie kubectl urltools)
 source $ZSH/oh-my-zsh.sh
 
 #Persistent rehash

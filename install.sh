@@ -2,7 +2,7 @@
 if [ $(uname) == "Darwin" ]; then
 	echo "Mac detected"
 	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-	brew install python3 wget tmux
+	brew install python3 wget tmux httpie
 	brew install neovim
 	brew tap caskroom/fonts
 	brew cask install font-hack-nerd-font
