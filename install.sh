@@ -10,6 +10,7 @@ if [ $(uname) == "Darwin" ]; then
 		wget
 	brew tap caskroom/fonts
 	brew cask install font-hack-nerd-font
+	brew cask install font-iosevka-nerd-font
 else
 	sudo apt-get install -y zsh tmux fonts-hack-ttf neovim python3
 fi
