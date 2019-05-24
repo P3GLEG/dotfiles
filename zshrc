@@ -69,6 +69,5 @@ export PATH=$PATH:$GOROOT/bin
 
 #Add python binaries such as awscli to the path
 export PATH="/usr/local/opt/python/libexec/bin:$PATH"
-
 alias vim=nvim
 function git() { hub $@; }

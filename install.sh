@@ -2,13 +2,17 @@
 if [ $(uname) == "Darwin" ]; then
 	echo "Mac detected"
 	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-	brew install python3 wget tmux httpie
-	brew install neovim
+	brew install httpie \
+		hub \
+		neovim \
+		python3 \
+		tmux \
+		wget
 	brew tap caskroom/fonts
 	brew cask install font-hack-nerd-font
 else
-	sudo apt-get install zsh tmux fonts-hack-ttf neovim 
-fi 
+	sudo apt-get install -y zsh tmux fonts-hack-ttf neovim
+fi
 mkdir -p $HOME/.cache/zsh/
 mkdir -p $HOME/.local/share/nvim/plugged
 mkdir -p $HOME/.config/nvim/undo
@@ -22,7 +26,6 @@ cp $(pwd)/init.vim $HOME/.config/nvim/
 cp $(pwd)/gitconfig $HOME/.gitconfig
 vim +'PlugInstall --sync' +qa
 wget -O /usr/local/bin/imgcat https://www.iterm2.com/utilities/imgcat && sudo chmod +x /usr/local/bin/imgcat
-echo "alias vim=nvim" >> $HOME/.zshrc
 sudo gem install colorls -n /usr/local/bin/
 curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
