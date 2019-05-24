@@ -29,7 +29,7 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-
 git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 git clone https://github.com/denysdovhan/spaceship-prompt.git $HOME/.oh-my-zsh/custom/themes/spaceship-prompt
 git clone https://github.com/gpakosz/.tmux.git $HOME/.tmux
-ln -s -f $HOME/.tmux/.tmux.conf
+ln -s -f $HOME/.tmux/.tmux.conf $HOME/.tmux.conf
 
 cp $(pwd)/zshrc $HOME/.zshrc
 cp $(pwd)/init.vim $HOME/.config/nvim/
