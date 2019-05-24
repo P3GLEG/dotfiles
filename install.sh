@@ -28,10 +28,15 @@ curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 git clone https://github.com/denysdovhan/spaceship-prompt.git $HOME/.oh-my-zsh/custom/themes/spaceship-prompt
+git clone https://github.com/gpakosz/.tmux.git $HOME/.tmux
+ln -s -f $HOME/.tmux/.tmux.conf
+
 cp $(pwd)/zshrc $HOME/.zshrc
 cp $(pwd)/init.vim $HOME/.config/nvim/
 cp $(pwd)/gitconfig $HOME/.gitconfig
+cp $(pwd)/tmux.conf $HOME/.tmux.conf.local
 vim +'PlugInstall --sync' +qa
 wget -O /usr/local/bin/imgcat https://www.iterm2.com/utilities/imgcat && sudo chmod +x /usr/local/bin/imgcat
 sudo gem install colorls -n /usr/local/bin/
+
 sudo chsh -s $USER /bin/zsh
