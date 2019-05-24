@@ -8,8 +8,7 @@ if [ $(uname) == "Darwin" ]; then
 	brew cask install font-hack-nerd-font
 else
 	sudo apt-get install zsh tmux fonts-hack-ttf neovim 
-fi
-
+fi 
 mkdir -p $HOME/.cache/zsh/
 mkdir -p $HOME/.local/share/nvim/plugged
 mkdir -p $HOME/.config/nvim/undo
@@ -20,6 +19,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/cust
 git clone https://github.com/denysdovhan/spaceship-prompt.git $HOME/.oh-my-zsh/custom/themes/spaceship-prompt
 cp $(pwd)/zshrc $HOME/.zshrc
 cp $(pwd)/init.vim $HOME/.config/nvim/
+cp $(pwd)/gitconfig $HOME/.gitconfig
 vim +'PlugInstall --sync' +qa
 wget -O /usr/local/bin/imgcat https://www.iterm2.com/utilities/imgcat && sudo chmod +x /usr/local/bin/imgcat
 echo "alias vim=nvim" >> $HOME/.zshrc
