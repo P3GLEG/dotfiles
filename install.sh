@@ -12,7 +12,10 @@ if [ $(uname) == "Darwin" ]; then
 	brew cask install font-hack-nerd-font
 	brew cask install font-iosevka-nerd-font
 else
-	sudo apt-get install -y zsh tmux fonts-hack-ttf neovim python3
+   	sudo add-apt-repository ppa:neovim-ppa/stable -y
+	sudo apt update -y
+	sudo apt-get install -y zsh tmux fonts-hack-ttf neovim python3 ruby ruby-dev httpie
+	sudo snap install hub --classic
 fi
 pip3 install --user pynvim
 mkdir -p $HOME/.cache/zsh/
@@ -22,8 +25,6 @@ curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed 's:env zsh -l::g' | sed 's:chsh -s .*$::g')"
-curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
