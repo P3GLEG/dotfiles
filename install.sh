@@ -1,4 +1,6 @@
 #!/bin/bash
+CURRENT_DIR="$(pwd)"
+
 if [ $(uname) == "Darwin" ]; then
 	echo "Mac detected"
 	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -9,6 +11,8 @@ if [ $(uname) == "Darwin" ]; then
 		wget
 	brew tap caskroom/fonts
 	brew cask install font-iosevka-nerd-font
+	brew cask install karabiner-elements
+	echo "You'll need to edit karabiner-elements to allow capslock to handle esc/ctrl"
 else
    	sudo add-apt-repository ppa:neovim-ppa/stable -y
 	sudo apt update -y
@@ -30,8 +34,9 @@ git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/cust
 git clone https://github.com/denysdovhan/spaceship-prompt.git $HOME/.oh-my-zsh/custom/themes/spaceship-prompt
 git clone https://github.com/gpakosz/.tmux.git $HOME/.tmux
 
-cp $(pwd)/zshrc $HOME/.zshrc
-cp $(pwd)/init.vim $HOME/.config/nvim/
-cp $(pwd)/gitconfig $HOME/.gitconfig
-cp $(pwd)/tmux.conf $HOME/.tmux.conf.local
+cp "$CURRENT_DIR/zshrc" $HOME/.zshrc
+cp "$CURRENT_DIR/init.vim" $HOME/.config/nvim/
+cp "$CURRENT_DIR/gitconfig" $HOME/.gitconfig
+cp "$CURRENT_DIR/tmux.conf" $HOME/.tmux.conf.local
+cp "$CURRENT_DIR/compinit-oh-my-zsh.zsh" /.oh-my-zsh/custom/compinit-oh-my-zsh.zsh
 nvim +PlugInstall +UpdateRemotePlugins +qa

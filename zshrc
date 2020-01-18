@@ -1,10 +1,13 @@
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
+export EDITOR="vim"
+export BROWSER="firefox"
 
-#Setup ZSH
 export ZSH=$HOME/.oh-my-zsh
+
 ZSH_THEME="spaceship"
 SPACESHIP_PROMPT_ORDER=(
+
   exit_code     # Exit code section
   time          # Time stamps section
   user          # Username section
@@ -24,7 +27,7 @@ SPACESHIP_PROMPT_ORDER=(
   haskell       # Haskell Stack section
   julia         # Julia section
   docker        # Docker section
-  aws           # Amazon Web Services section
+  # Amazon Web Services section
   venv          # virtualenv section
   conda         # conda virtualenv section
   pyenv         # Pyenv section
@@ -39,6 +42,7 @@ SPACESHIP_PROMPT_ORDER=(
   jobs          # Background jobs indicator
   char          # Prompt character
   )
+
 SPACESHIP_EXIT_CODE_SHOW="true"
 SPACESHIP_PROMPT_ADD_NEWLINE="true"
 SPACESHIP_HOST_SHOW_FULL="true"
@@ -48,21 +52,12 @@ SPACESHIP_CHAR_SUFFIX=("  ")
 SPACESHIP_EXIT_CODE_SUFFIX="\n"
 SPACESHIP_CHAR_COLOR_SUCCESS="green"
 SPACESHIP_PROMPT_FIRST_PREFIX_SHOW="true"
-plugins=(git zsh-syntax-highlighting zsh-autosuggestions docker docker-compose heroku colored-man-pages command-not-found aws common-aliases encode64 jsontools sudo httpie kubectl urltools)
+
+plugins=(git zsh-syntax-highlighting zsh-autosuggestions docker docker-compose heroku colored-man-pages command-not-found  encode64 jsontools sudo httpie urltools)
 source $ZSH/oh-my-zsh.sh
 
 #Persistent rehash
 zstyle ':completion:*' rehash true
 
-export BROWSER="firefox"
-export EDITOR="vim"
-
-#Setup Golang
-export GOPATH=$HOME/workspace/go
-export GOROOT=/usr/local/opt/go/libexec
-export PATH=$PATH:$GOPATH/bin
-export PATH=$PATH:$GOROOT/bin
-
-#Add python binaries such as awscli to the path
-export PATH="/usr/local/opt/python/libexec/bin:$PATH"
 alias vim=nvim
+alias anaconda="source ~/.conda.zshrc"

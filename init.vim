@@ -1,7 +1,6 @@
 set hidden
 set cmdheight=2
 set encoding=UTF-8
-set updatetime=300
 set autoindent noexpandtab tabstop=4 shiftwidth=4
 set shortmess+=c
 set signcolumn=yes
@@ -14,17 +13,17 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'https://github.com/scrooloose/nerdtree'
 Plug 'https://github.com/yegappan/mru'
-Plug 'https://github.com/Badacadabra/vim-archery'
+Plug 'chriskempson/base16-vim'
 Plug 'preservim/nerdcommenter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
-colorscheme archery
 let g:airline_powerline_fonts = 1
-let g:airline_theme = 'archery'
+let g:airline_theme = 'dark'
+colorscheme base16-default-dark
 let mapleader = " "
-nmap <leader>n :NERDTree<cr>
+nmap <leader>n :NERDTreeToggle<cr>
 nmap <leader>j <C-W>j
 nmap <leader>k <C-W>k
 nmap <leader>l <C-W>l
@@ -47,12 +46,3 @@ if has("autocmd")
 endif
 set termguicolors
 let g:rainbow_active = 1
-let g:rainbow_conf = {
-\	'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
-\	'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
-\	'guis': [''],
-\	'cterms': [''],
-\	'operators': '_,_',
-\	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
-\}
-
