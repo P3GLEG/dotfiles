@@ -66,4 +66,5 @@ alias anaconda="source ~/.conda.zshrc"
 alias ls="exa -l"
 alias cat=bat
 alias htop=gotop
+alias curl=http
 
