@@ -8,15 +8,22 @@ if [ $(uname) == "Darwin" ]; then
 		neovim \
 		python3 \
 		tmux \
-		wget
+		wget \
+		bat \
+		fpp \
+		exa
 	brew tap caskroom/fonts
 	brew cask install font-iosevka-nerd-font
 	brew cask install karabiner-elements
 	echo "You'll need to edit karabiner-elements to allow capslock to handle esc/ctrl"
+if [ -f "/etc/arch-release" ]; then
+	sudo pacman -S neovim tmux zsh httpie python3-neovim xclip
+	echo "bind -t vi-copy y copy-pipe \"xclip -sel clip -i\"" >> tmux.conf
 else
    	sudo add-apt-repository ppa:neovim-ppa/stable -y
 	sudo apt update -y
-	sudo apt-get install -y zsh tmux neovim python3 httpie python3-neovim neovim
+	sudo apt-get install -y zsh tmux neovim python3 httpie python3-neovim neovim xclip
+	echo "bind -t vi-copy y copy-pipe \"xclip -sel clip -i\"" >> tmux.conf
 fi
 pip install --user neovim
 pip install --user pynvim
@@ -32,7 +39,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 git clone https://github.com/denysdovhan/spaceship-prompt.git $HOME/.oh-my-zsh/custom/themes/spaceship-prompt
-git clone https://github.com/gpakosz/.tmux.git $HOME/.tmux
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 cp "$CURRENT_DIR/zshrc" $HOME/.zshrc
 cp "$CURRENT_DIR/init.vim" $HOME/.config/nvim/

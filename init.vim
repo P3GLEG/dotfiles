@@ -5,6 +5,7 @@ set autoindent noexpandtab tabstop=4 shiftwidth=4
 set shortmess+=c
 set signcolumn=yes
 call plug#begin('~/.local/share/nvim/plugged')
+Plug 'christoomey/vim-tmux-navigator'
 Plug 'luochen1990/rainbow'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'michaeljsmith/vim-indent-object'
@@ -46,3 +47,4 @@ if has("autocmd")
 endif
 set termguicolors
 let g:rainbow_active = 1
+let g:python3_host_prog = '/usr/local/bin/python3'

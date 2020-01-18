@@ -61,3 +61,5 @@ zstyle ':completion:*' rehash true
 
 alias vim=nvim
 alias anaconda="source ~/.conda.zshrc"
+alias ls="exa -l"
+alias cat=bat
