@@ -7,7 +7,6 @@ export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="spaceship"
 SPACESHIP_PROMPT_ORDER=(
-
   exit_code     # Exit code section
   time          # Time stamps section
   user          # Username section
@@ -52,6 +51,9 @@ SPACESHIP_CHAR_SUFFIX=("  ")
 SPACESHIP_EXIT_CODE_SUFFIX="\n"
 SPACESHIP_CHAR_COLOR_SUCCESS="green"
 SPACESHIP_PROMPT_FIRST_PREFIX_SHOW="true"
+SPACESHIP_TIME_COLOR="green"
+SPACESHIP_TIME_SHOW="true"
+SPACESHIP_TIME_FORMAT="%W-%*"
 
 plugins=(git zsh-syntax-highlighting zsh-autosuggestions docker docker-compose heroku colored-man-pages command-not-found  encode64 jsontools sudo httpie urltools)
 source $ZSH/oh-my-zsh.sh
