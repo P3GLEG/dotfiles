@@ -12,9 +12,9 @@ if [ $(uname) == "Darwin" ]; then
 		bat \
 		fpp \
 		exa
+	brew tap cjbassi/gotop
 	brew tap caskroom/fonts
-	brew cask install font-iosevka-nerd-font
-	brew cask install karabiner-elements
+	brew cask install font-iosevka-nerd-font gotop karabiner-elements
 	echo "You'll need to edit karabiner-elements to allow capslock to handle esc/ctrl"
 if [ -f "/etc/arch-release" ]; then
 	sudo pacman -S neovim tmux zsh httpie python3-neovim xclip
