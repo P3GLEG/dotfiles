@@ -68,4 +68,7 @@ alias cat=bat
 alias htop=gotop
 export KEYTIMEOUT=1 #Required for vi-mode notification lag
 spaceship_vi_mode_enable
-
+bindkey "^[OA" up-line-or-beginning-search #Add searching when using vi-mode
+bindkey "^[OB" down-line-or-beginning-search
+bindkey -M vicmd "k" up-line-or-beginning-search
+bindkey -M vicmd "j" down-line-or-beginning-search
