@@ -8,9 +8,9 @@ if [ $(uname) == "Darwin" ]; then
 		python3 \
 		tmux \
 		wget \
-		bat \
 		fpp \
-		exa
+		exa \
+		zsh-history-substring-search
 	brew tap cjbassi/gotop
 	brew tap caskroom/fonts
 	brew cask install font-iosevka-nerd-font gotop karabiner-elements

@@ -55,7 +55,7 @@ SPACESHIP_TIME_COLOR="green"
 SPACESHIP_TIME_SHOW="true"
 SPACESHIP_TIME_FORMAT="%W-%*"
 
-plugins=(git zsh-syntax-highlighting zsh-autosuggestions docker docker-compose heroku colored-man-pages command-not-found  encode64 jsontools sudo httpie urltools)
+plugins=(git zsh-syntax-highlighting zsh-autosuggestions docker docker-compose heroku colored-man-pages command-not-found  encode64 jsontools sudo httpie urltools history-substring-search)
 source $ZSH/oh-my-zsh.sh
 
 #Persistent rehash
@@ -66,5 +66,6 @@ alias anaconda="source ~/.conda.zshrc"
 alias ls="exa -l"
 alias cat=bat
 alias htop=gotop
-alias curl=http
+export KEYTIMEOUT=1 #Required for vi-mode notification lag
+spaceship_vi_mode_enable
 
