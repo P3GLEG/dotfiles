@@ -19,10 +19,9 @@ Plug 'preservim/nerdcommenter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'rust-lang/rust.vim'
 call plug#end()
 let g:airline_powerline_fonts = 1
-let g:airline_theme = 'dark'
-colorscheme base16-default-dark
 let mapleader = " "
 nmap <leader>n :NERDTreeToggle<cr>
 nmap <leader>j <C-W>j
@@ -45,6 +44,5 @@ endfunction
 if has("autocmd")
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 endif
-set termguicolors
-let g:rainbow_active = 1
 let g:python3_host_prog = '/usr/local/bin/python3'
+colorscheme vibrantink
