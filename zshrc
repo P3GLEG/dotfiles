@@ -32,7 +32,6 @@ SPACESHIP_PROMPT_ORDER=(
   pyenv         # Pyenv section
   dotnet        # .NET section
   ember         # Ember.js section
-  kubecontext   # Kubectl context section
   terraform     # Terraform workspace section
   exec_time     # Execution time
   line_sep      # Line break
@@ -64,8 +63,6 @@ zstyle ':completion:*' rehash true
 alias vim=nvim
 alias anaconda="source ~/.conda.zshrc"
 alias ls="exa -l"
-alias cat=bat
-alias htop=gotop
 export KEYTIMEOUT=1 #Required for vi-mode notification lag
 spaceship_vi_mode_enable
 bindkey "^[OA" up-line-or-beginning-search #Add searching when using vi-mode
