@@ -2,7 +2,6 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export EDITOR="vim"
 export BROWSER="firefox"
-
 export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="spaceship"
@@ -13,20 +12,15 @@ SPACESHIP_PROMPT_ORDER=(
   dir           # Current directory section
   host          # Hostname section
   git           # Git section (git_branch + git_status)
-  hg            # Mercurial section (hg_branch  + hg_status)
   package       # Package version
   node          # Node.js section
   ruby          # Ruby section
   elixir        # Elixir section
-  xcode         # Xcode section
-  swift         # Swift section
   golang        # Go section
   php           # PHP section
   rust          # Rust section
   haskell       # Haskell Stack section
-  julia         # Julia section
   docker        # Docker section
-  # Amazon Web Services section
   venv          # virtualenv section
   conda         # conda virtualenv section
   pyenv         # Pyenv section
@@ -35,7 +29,6 @@ SPACESHIP_PROMPT_ORDER=(
   terraform     # Terraform workspace section
   exec_time     # Execution time
   line_sep      # Line break
-  battery       # Battery level and status
   vi_mode       # Vi-mode indicator
   jobs          # Background jobs indicator
   char          # Prompt character
@@ -54,14 +47,13 @@ SPACESHIP_TIME_COLOR="green"
 SPACESHIP_TIME_SHOW="true"
 SPACESHIP_TIME_FORMAT="%W-%*"
 
-plugins=(git zsh-syntax-highlighting zsh-autosuggestions docker docker-compose heroku colored-man-pages command-not-found  encode64 jsontools sudo httpie urltools history-substring-search)
+plugins=(git zsh-syntax-highlighting zsh-autosuggestions colored-man-pages command-not-found history-substring-search)
 source $ZSH/oh-my-zsh.sh
 
 #Persistent rehash
 zstyle ':completion:*' rehash true
 
 alias vim=nvim
-alias anaconda="source ~/.conda.zshrc"
 alias ls="exa -l"
 export KEYTIMEOUT=1 #Required for vi-mode notification lag
 spaceship_vi_mode_enable

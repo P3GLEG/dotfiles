@@ -5,21 +5,22 @@ set autoindent noexpandtab tabstop=4 shiftwidth=4
 set shortmess+=c
 set signcolumn=yes
 call plug#begin('~/.local/share/nvim/plugged')
+Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'luochen1990/rainbow'
 Plug 'ekalinin/Dockerfile.vim'
+Plug 'https://github.com/scrooloose/nerdtree'
+Plug 'https://github.com/yegappan/mru'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
+Plug 'luochen1990/rainbow'
 Plug 'michaeljsmith/vim-indent-object'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'preservim/nerdcommenter'
+Plug 'rust-lang/rust.vim'
 Plug 'ryanoasis/vim-devicons'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'https://github.com/scrooloose/nerdtree'
-Plug 'https://github.com/yegappan/mru'
-Plug 'chriskempson/base16-vim'
-Plug 'preservim/nerdcommenter'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
-Plug 'junegunn/fzf.vim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'rust-lang/rust.vim'
+Plug 'voldikss/vim-floaterm'
 call plug#end()
 let g:airline_powerline_fonts = 1
 let mapleader = " "
@@ -46,3 +47,4 @@ if has("autocmd")
 endif
 let g:python3_host_prog = '/usr/local/bin/python3'
 colorscheme vibrantink
+let g:floaterm_keymap_toggle = '<Leader>t'
