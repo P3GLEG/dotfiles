@@ -2,9 +2,7 @@ return {
     "catppuccin/nvim",
     name = "catppuccin",
     priority = 1000,
-    config = function()
-        vim.cmd.colorscheme("catppuccin-mocha")
-    end,
+
     opts = {
         integrations = {
             aerial = true,
@@ -41,5 +39,39 @@ return {
             treesitter_context = true,
             which_key = true,
         },
+        color_overrides = {
+            mocha = {
+                rosewater = "#FF6600",
+                flamingo = "#CCFF04",
+                pink = "#FF00FF",
+                mauve = "#9933CC",
+                red = "#FF0000",
+                maroon = "#870000",
+                peach = "#FFCC00",
+                yellow = "#FFFF00",
+                green = "#00FF00",
+                teal = "#00FFFF",
+                sky = "#44B4CC",
+                sapphire = "#0000FF",
+                blue = "#44B4CC",
+                lavender = "#E5E5E5",
+                text = "#F5F5F5",
+                subtext1 = "#555555",
+                subtext0 = "#878787",
+                overlay2 = "#2D2D2D",
+                overlay1 = "#252525",
+                overlay0 = "#1E1E1E",
+                surface2 = "#171717",
+                surface1 = "#111111",
+                surface0 = "#0B0B0B",
+                base = "#080808",
+                mantle = "#050505",
+                crust = "#020202",
+            },
+        },
     },
+    config = function(_, opts)
+        require("catppuccin").setup(opts)
+        vim.cmd.colorscheme("catppuccin-mocha")
+    end,
 }
