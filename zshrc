@@ -23,13 +23,9 @@ SPACESHIP_PROMPT_ORDER=(
   docker        # Docker section
   venv          # virtualenv section
   conda         # conda virtualenv section
-  pyenv         # Pyenv section
-  dotnet        # .NET section
-  ember         # Ember.js section
   terraform     # Terraform workspace section
   exec_time     # Execution time
   line_sep      # Line break
-  vi_mode       # Vi-mode indicator
   jobs          # Background jobs indicator
   char          # Prompt character
   )
@@ -55,9 +51,12 @@ zstyle ':completion:*' rehash true
 
 alias vim=nvim
 alias ls="exa -l"
+alias python='python3'
+alias pip='pip3'
 export KEYTIMEOUT=1 #Required for vi-mode notification lag
-spaceship_vi_mode_enable
 bindkey "^[OA" up-line-or-beginning-search #Add searching when using vi-mode
 bindkey "^[OB" down-line-or-beginning-search
 bindkey -M vicmd "k" up-line-or-beginning-search
 bindkey -M vicmd "j" down-line-or-beginning-search
+export PATH="/opt/homebrew/bin:$PATH"
+

@@ -1,0 +1,7 @@
+brew "neovim"
+brew "tmux"
+brew "python3"
+brew "node"
+brew "wget"
+tap "homebrew/cask-fonts"
+cask "font-iosevka-nerd-font"
