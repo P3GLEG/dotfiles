@@ -1,6 +1,6 @@
 vim.cmd("set cmdheight=2")
 vim.cmd("set cursorline")
-vim.cmd("set encoding=UTF-8")
+vim.cmd("set encoding=utf-8")
 vim.cmd("set expandtab")
 vim.cmd("set hidden")
 vim.cmd("set shiftwidth=4")
@@ -10,8 +10,6 @@ vim.cmd("set softtabstop=4")
 vim.cmd("set tabstop=4")
 vim.cmd("set clipboard=")
 vim.cmd("set mouse=")
-vim.cmd("highlight Cursorline guibg=red")
-vim.cmd("highlight CursorlineNr guibg=blue")
 
 -- Leader key is spacebar
 vim.g.mapleader = " "
@@ -23,9 +21,11 @@ vim.keymap.set("n", "<leader>k", "<C-w>k", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>l", "<C-w>l", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>m", "<C-6>", { noremap = true, silent = true })
 
--- Keep Persistent history
+-- Keep Persistent history in XDG state (outside repo)
 vim.cmd("set undofile")
-vim.cmd("set undodir=$HOME/.config/nvim/undo")
+local undodir = vim.fn.stdpath("state") .. "/undo"
+vim.fn.mkdir(undodir, "p")
+vim.opt.undodir = undodir
 
 local function augroup(name)
 	return vim.api.nvim_create_augroup(name, { clear = true })

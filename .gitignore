@@ -1,0 +1,15 @@
+.DS_Store
+
+# Neovim runtime/state created under config
+nvim/.DS_Store
+nvim/lazy-lock.json
+nvim/undo/
+nvim/.netrwhist
+nvim/plugin/
+
+# Swap/backup files
+*.swp
+*.swo
+*.swx
+*.tmp
+*~

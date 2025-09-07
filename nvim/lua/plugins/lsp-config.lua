@@ -14,7 +14,7 @@ return {
         },
         config = function()
             require("mason-lspconfig").setup({
-                ensure_installed = { "lua_ls", "tsserver", "html", "biome", "ruff_lsp", "pyright", "rust_analyzer" },
+                ensure_installed = { "lua_ls", "ts_ls", "html", "biome", "ruff_lsp", "pyright", "rust_analyzer" },
             })
         end,
     },
@@ -25,9 +25,17 @@ return {
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
             local lspconfig = require("lspconfig")
-            lspconfig.tsserver.setup({
-                capabilities = capabilities,
-            })
+            -- TypeScript
+            if lspconfig.ts_ls then
+                lspconfig.ts_ls.setup({
+                    capabilities = capabilities,
+                })
+            else
+                -- fallback for older lspconfig
+                lspconfig.tsserver.setup({
+                    capabilities = capabilities,
+                })
+            end
             lspconfig.html.setup({
                 capabilities = capabilities,
             })

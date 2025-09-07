@@ -1,6 +1,6 @@
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
-export EDITOR="vim"
+export EDITOR="nvim"
 export BROWSER="firefox"
 export ZSH=$HOME/.oh-my-zsh
 
@@ -43,14 +43,14 @@ SPACESHIP_TIME_COLOR="green"
 SPACESHIP_TIME_SHOW="true"
 SPACESHIP_TIME_FORMAT="%W-%*"
 
-plugins=(git zsh-syntax-highlighting zsh-autosuggestions colored-man-pages command-not-found history-substring-search)
+plugins=(git colored-man-pages history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
 #Persistent rehash
 zstyle ':completion:*' rehash true
 
 alias vim=nvim
-alias ls="exa -l"
+alias ls="eza -l"
 alias python='python3'
 alias pip='pip3'
 export KEYTIMEOUT=1 #Required for vi-mode notification lag
@@ -58,5 +58,8 @@ bindkey "^[OA" up-line-or-beginning-search #Add searching when using vi-mode
 bindkey "^[OB" down-line-or-beginning-search
 bindkey -M vicmd "k" up-line-or-beginning-search
 bindkey -M vicmd "j" down-line-or-beginning-search
-export PATH="/opt/homebrew/bin:$PATH"
-
+if command -v brew >/dev/null 2>&1; then
+  eval "$(brew shellenv)"
+else
+  export PATH="/opt/homebrew/bin:$PATH"
+fi

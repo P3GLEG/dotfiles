@@ -14,4 +14,7 @@ vim.opt.rtp:prepend(lazypath)
 local opts = {}
 
 require("vim-config")
-require("lazy").setup("plugins")
+require("lazy").setup("plugins", {
+  -- keep lockfile out of repo when config is symlinked
+  lockfile = vim.fn.stdpath("state") .. "/lazy/lazy-lock.json",
+})
