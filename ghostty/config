@@ -1,0 +1,11 @@
+font-family = Iosevka Nerd Font
+font-size = 14
+
+theme = Catppuccin Mocha
+
+unfocused-split-opacity = 0.85
+split-divider-color = #45475a
+
+scrollback-limit = 50000
+
+working-directory = ~/workspace
