@@ -3,11 +3,15 @@ return {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     config = function()
-      local config = require("nvim-treesitter.configs")
-      config.setup({
-        ensure_installed = { "lua", "javascript", "python", "rust" },
-        highlight = { enable = true },
-        indent = { enable = true },
+      require("nvim-treesitter").setup()
+      -- Install parsers
+      local ensure = { "lua", "javascript", "python", "rust" }
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "LazyDone",
+        once = true,
+        callback = function()
+          vim.cmd("TSInstall " .. table.concat(ensure, " "))
+        end,
       })
     end,
   },

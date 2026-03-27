@@ -4,6 +4,6 @@ brew "node"
 brew "python"
 brew "ripgrep"
 brew "tmux"
+brew "tree-sitter-cli"
 brew "wget"
-
 cask "font-iosevka-nerd-font"
