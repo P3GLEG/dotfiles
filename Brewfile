@@ -1,4 +1,5 @@
 brew "eza"
+brew "starship"
 brew "neovim"
 brew "node"
 brew "python"

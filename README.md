@@ -1,6 +1,6 @@
 # Dotfiles
 
-Opinionated macOS setup for zsh, Neovim, tmux, and iTerm2.
+Opinionated macOS setup for zsh, Neovim, tmux, and Ghostty.
 
 ## Install
 
@@ -19,7 +19,7 @@ bash install.sh
 
 Notes:
 - The script installs Homebrew packages from `Brewfile` and symlinks configs into your `$HOME`.
-- iTerm2 preferences are redirected to `$HOME/.config/iterm_config` (macOS only).
+- Ghostty config is symlinked to `$HOME/.config/ghostty`.
 - For optional Rust toolchain, run: `WITH_RUST=1 bash install.sh`.
 
 ## Contents

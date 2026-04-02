@@ -1,0 +1,61 @@
+# Starship prompt config — replaces Spaceship theme
+# Mirrors prior Spaceship prompt order and style
+
+format = """$status$time$username$directory$hostname$git_branch$git_status$package$nodejs$ruby$elixir$golang$php$rust$haskell$docker_context$python$conda$terraform$cmd_duration\n$jobs$character"""
+
+add_newline = true
+
+[character]
+success_symbol = "[\ue62e](bold green) "
+error_symbol = "[\ue62e](bold red) "
+
+[status]
+disabled = false
+format = "[$status]($style)\n"
+
+[time]
+disabled = false
+format = "[$time](green) "
+time_format = "%m/%d/%y-%H:%M:%S"
+
+[username]
+show_always = false
+
+[hostname]
+ssh_only = false
+format = "[$ssh_symbol$hostname](bold red) "
+
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+
+[git_branch]
+format = "[$symbol$branch(:$remote_branch)]($style) "
+
+[git_status]
+format = '([$all_status$ahead_behind]($style) )'
+
+[cmd_duration]
+min_time = 2000
+format = "[$duration]($style) "
+
+[nodejs]
+format = "[$symbol($version)]($style) "
+
+[rust]
+format = "[$symbol($version)]($style) "
+
+[golang]
+format = "[$symbol($version)]($style) "
+
+[python]
+format = "[$symbol($version)( \\($virtualenv\\))]($style) "
+
+[terraform]
+format = "[$symbol$workspace]($style) "
+
+[docker_context]
+format = "[$symbol$context]($style) "
+
+[package]
+format = "[$symbol$version]($style) "
