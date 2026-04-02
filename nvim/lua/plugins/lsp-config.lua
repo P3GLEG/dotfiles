@@ -1,36 +1,86 @@
 return {
-    {
-        "williamboman/mason.nvim",
-        lazy = false,
-        config = function()
-            require("mason").setup()
-        end,
-    },
-    {
-        "williamboman/mason-lspconfig.nvim",
-        lazy = false,
-        config = function()
-            require("mason-lspconfig").setup({
-                ensure_installed = { "lua_ls", "ts_ls", "html", "biome", "ruff", "pyright", "rust_analyzer" },
-            })
-        end,
-    },
-    {
-        "neovim/nvim-lspconfig",
-        lazy = false,
-        config = function()
-            local capabilities = require("cmp_nvim_lsp").default_capabilities()
+  {
+    'mason-org/mason.nvim',
+    lazy = false,
+    config = function()
+      require('mason').setup()
+    end,
+  },
+  {
+    'mason-org/mason-lspconfig.nvim',
+    lazy = false,
+    dependencies = { 'mason-org/mason.nvim' },
+    config = function()
+      require('mason-lspconfig').setup({
+        ensure_installed = {
+          'lua_ls',
+          'ts_ls',
+          'html',
+          'biome',
+          'basedpyright',
+          'ruff',
+        },
+      })
+    end,
+  },
+  {
+    'neovim/nvim-lspconfig',
+    lazy = false,
+    dependencies = { 'mason-org/mason-lspconfig.nvim' },
+    config = function()
+      -- Lua
+      vim.lsp.config('lua_ls', {
+        settings = {
+          Lua = { diagnostics = { globals = { 'vim' } } },
+        },
+      })
 
-            vim.lsp.config("ts_ls", { capabilities = capabilities })
-            vim.lsp.config("html", { capabilities = capabilities })
-            vim.lsp.config("lua_ls", { capabilities = capabilities })
-            vim.lsp.config("pyright", { capabilities = capabilities })
-            vim.lsp.config("rust_analyzer", {
-                capabilities = capabilities,
-                settings = { ["rust-analyzer"] = {} },
-            })
+      -- TypeScript / JavaScript
+      vim.lsp.config('ts_ls', {})
 
-            vim.lsp.enable({ "ts_ls", "html", "lua_ls", "pyright", "rust_analyzer" })
+      -- HTML
+      vim.lsp.config('html', {})
+
+      -- Biome (JS/TS formatting)
+      vim.lsp.config('biome', {})
+
+      -- Python: basedpyright for type checking + intellisense
+      vim.lsp.config('basedpyright', {
+        settings = {
+          basedpyright = {
+            analysis = {
+              typeCheckingMode = 'standard',
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+              diagnosticMode = 'workspace',
+            },
+          },
+          -- Let ruff handle import organization
+          pyright = { disableOrganizeImports = true },
+        },
+      })
+
+      -- Python: ruff for linting + formatting
+      vim.lsp.config('ruff', {})
+
+      -- Enable all servers
+      vim.lsp.enable({
+        'lua_ls', 'ts_ls', 'html', 'biome',
+        'basedpyright', 'ruff',
+      })
+
+      -- Disable ruff's hover (basedpyright handles hover docs)
+      vim.api.nvim_create_autocmd('LspAttach', {
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client and client.name == 'ruff' then
+            client.server_capabilities.hoverProvider = false
+          end
         end,
-    },
+      })
+
+      -- gd is NOT a Neovim 0.11 default — add it manually
+      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'Go to definition' })
+    end,
+  },
 }

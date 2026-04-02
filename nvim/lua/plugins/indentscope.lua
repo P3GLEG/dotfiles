@@ -11,16 +11,15 @@ return {
         vim.api.nvim_create_autocmd("FileType", {
             pattern = {
                 "help",
-                "alpha",
-                "dashboard",
-                "neo-tree",
+                "snacks_dashboard",
                 "Trouble",
                 "trouble",
                 "lazy",
                 "mason",
                 "notify",
                 "toggleterm",
-                "lazyterm",
+                "oil",
+                "snacks_explorer",
             },
             callback = function()
                 vim.b.miniindentscope_disable = true
