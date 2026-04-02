@@ -1,11 +1,115 @@
-font-family = Iosevka Nerd Font
-font-size = 14
+# ── Font ──────────────────────────────
+font-family = Anonymous Pro
+font-size = 16
+font-thicken = true
+font-thicken-strength = 50
+adjust-cell-height = 2
+adjust-underline-position = 4
+grapheme-width-method = unicode
 
-theme = Catppuccin Mocha
+# ── Colors (custom deep purple theme) ─
+background = #15152b
+foreground = #ffffff
+selection-background = #380d6a
+selection-foreground = #ffffff
+cursor-color = #ffffff
+cursor-text = #15152b
+minimum-contrast = 1.1
+palette = 0=#000000
+palette = 1=#e33937
+palette = 2=#3ad900
+palette = 3=#fad000
+palette = 4=#7857fe
+palette = 5=#ff2c70
+palette = 6=#80fcff
+palette = 7=#ffffff
+palette = 8=#5c5c61
+palette = 9=#e33937
+palette = 10=#3ad900
+palette = 11=#fad000
+palette = 12=#6943ff
+palette = 13=#fb94ff
+palette = 14=#80fcff
+palette = 15=#ffffff
 
-unfocused-split-opacity = 0.85
-split-divider-color = #45475a
+# ── macOS ─────────────────────────────
+macos-option-as-alt = true
+macos-titlebar-style = tabs
+macos-non-native-fullscreen = true
+macos-titlebar-proxy-icon = hidden
+window-colorspace = display-p3
 
-scrollback-limit = 50000
+# ── Window & appearance ───────────────
+window-padding-x = 8
+window-padding-y = 4
+window-padding-balance = true
+window-padding-color = extend
+window-save-state = always
+confirm-close-surface = false
+resize-overlay = never
+unfocused-split-opacity = 0.7
+focus-follows-mouse = true
 
+# ── Cursor ────────────────────────────
+cursor-style = block
+cursor-style-blink = false
+
+# ── Mouse ─────────────────────────────
+mouse-hide-while-typing = true
+mouse-scroll-multiplier = 3
+
+# ── Clipboard & selection ─────────────
+copy-on-select = false
+clipboard-read = allow
+clipboard-write = allow
+clipboard-trim-trailing-spaces = true
+clipboard-paste-bracketed-safe = true
+
+# ── Shell integration ─────────────────
+shell-integration = detect
+shell-integration-features = no-cursor,sudo,title,ssh-env,ssh-terminfo
+
+# ── Scrollback ────────────────────────
+scrollback-limit = 10000000
+
+# ── Working directory ─────────────────
 working-directory = ~/workspace
+
+# ── Quick terminal (hotkey window) ────
+keybind = global:ctrl+grave_accent=toggle_quick_terminal
+quick-terminal-position = top
+quick-terminal-screen = main
+quick-terminal-animation-duration = 0.2
+quick-terminal-autohide = true
+
+# ── Keybinds: tmux passthrough ────────
+# (Ctrl+B prefix = \x02; change to \x01 for Ctrl+A)
+keybind = cmd+1=text:\x021
+keybind = cmd+2=text:\x022
+keybind = cmd+3=text:\x023
+keybind = cmd+4=text:\x024
+keybind = cmd+5=text:\x025
+keybind = cmd+6=text:\x026
+keybind = cmd+7=text:\x027
+keybind = cmd+8=text:\x028
+keybind = cmd+9=text:\x029
+keybind = cmd+d=text:\x02\x25
+keybind = cmd+shift+d=text:\x02\x22
+keybind = cmd+w=text:\x02\x78
+keybind = cmd+t=text:\x02\x63
+keybind = cmd+shift+enter=text:\x02\x7a
+
+# ── Keybinds: scrolling fix ──────────
+keybind = unconsumed:shift+page_up=scroll_page_up
+keybind = unconsumed:shift+page_down=scroll_page_down
+
+# ── Keybinds: quality of life ────────
+keybind = performable:ctrl+c=copy_to_clipboard
+keybind = cmd+shift+comma=reload_config
+
+# ── Notifications ─────────────────────
+notify-on-command-finish = unfocused
+notify-on-command-finish-after = 10s
+
+# ── Auto-update ───────────────────────
+auto-update = download
