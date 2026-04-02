@@ -2,64 +2,56 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export EDITOR="nvim"
 export BROWSER="firefox"
-export ZSH=$HOME/.oh-my-zsh
 
-ZSH_THEME="spaceship"
-SPACESHIP_PROMPT_ORDER=(
-  exit_code     # Exit code section
-  time          # Time stamps section
-  user          # Username section
-  dir           # Current directory section
-  host          # Hostname section
-  git           # Git section (git_branch + git_status)
-  package       # Package version
-  node          # Node.js section
-  ruby          # Ruby section
-  elixir        # Elixir section
-  golang        # Go section
-  php           # PHP section
-  rust          # Rust section
-  haskell       # Haskell Stack section
-  docker        # Docker section
-  venv          # virtualenv section
-  conda         # conda virtualenv section
-  terraform     # Terraform workspace section
-  exec_time     # Execution time
-  line_sep      # Line break
-  jobs          # Background jobs indicator
-  char          # Prompt character
-  )
+# Colors for ls and completions
+export LS_COLORS="di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
 
-SPACESHIP_EXIT_CODE_SHOW="true"
-SPACESHIP_PROMPT_ADD_NEWLINE="true"
-SPACESHIP_HOST_SHOW_FULL="true"
-SPACESHIP_HOST_COLOR="red"
-SPACESHIP_CHAR_SYMBOL="\ue62e"
-SPACESHIP_CHAR_SUFFIX=("  ")
-SPACESHIP_EXIT_CODE_SUFFIX="\n"
-SPACESHIP_CHAR_COLOR_SUCCESS="green"
-SPACESHIP_PROMPT_FIRST_PREFIX_SHOW="true"
-SPACESHIP_TIME_COLOR="green"
-SPACESHIP_TIME_SHOW="true"
-SPACESHIP_TIME_FORMAT="%W-%*"
-
-plugins=(git colored-man-pages history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
-source $ZSH/oh-my-zsh.sh
-
-#Persistent rehash
-zstyle ':completion:*' rehash true
-
-alias vim=nvim
-alias ls="eza -l"
-alias python='python3'
-alias pip='pip3'
-export KEYTIMEOUT=1 #Required for vi-mode notification lag
-bindkey "^[OA" up-line-or-beginning-search #Add searching when using vi-mode
-bindkey "^[OB" down-line-or-beginning-search
-bindkey -M vicmd "k" up-line-or-beginning-search
-bindkey -M vicmd "j" down-line-or-beginning-search
+# Homebrew
 if command -v brew >/dev/null 2>&1; then
   eval "$(brew shellenv)"
 else
   export PATH="/opt/homebrew/bin:$PATH"
 fi
+
+# History
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=100000
+SAVEHIST=100000
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+
+# Completion
+autoload -Uz compinit
+if [ -f "$HOME/.cache/zsh/zcompdump" ]; then
+  compinit -d "$HOME/.cache/zsh/zcompdump"
+else
+  compinit
+fi
+zstyle ':completion:*' rehash true
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu select
+
+# Zsh plugins
+ZSH_PLUGINS="$HOME/.zsh/plugins"
+source "$ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "$ZSH_PLUGINS/zsh-completions/zsh-completions.plugin.zsh"
+source "$ZSH_PLUGINS/zsh-history-substring-search/zsh-history-substring-search.zsh"
+source "$ZSH_PLUGINS/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+
+# Aliases
+alias vim=nvim
+alias ls="eza -l --color=auto --icons"
+alias python='python3'
+alias pip='pip3'
+
+# Vi mode
+export KEYTIMEOUT=1
+bindkey "^[[A" history-substring-search-up
+bindkey "^[[B" history-substring-search-down
+bindkey "^[OA" history-substring-search-up
+bindkey "^[OB" history-substring-search-down
+bindkey -M vicmd "k" history-substring-search-up
+bindkey -M vicmd "j" history-substring-search-down
+
+# Starship prompt
+eval "$(starship init zsh)"
