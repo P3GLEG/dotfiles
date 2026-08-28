@@ -10,14 +10,26 @@
 # directory nests the link inside it instead of replacing it.
 
 # ── Font ──────────────────────────────
-font-family = Iosevka Nerd Font
-font-size = 14
+font-family = Anonymous Pro
+font-size = 16
+font-thicken = true
+font-thicken-strength = 50
 adjust-cell-height = 2
 adjust-underline-position = 4
 grapheme-width-method = unicode
 
+# cmux draws the sidebar itself; this sizes it independently of the terminal.
+sidebar-font-size = 10.5
+
 # ── Colors ────────────────────────────
-theme = Catppuccin Mocha
+# Per-appearance themes. `cmux themes set --light X --dark Y` writes this
+# same key into cmux's OWN config at
+#   ~/Library/Application Support/com.cmuxterm.app/config.ghostty
+# which OVERRIDES this file. Keeping it here instead means the theme lives
+# in git and reproduces on a new machine; `cmux themes clear` drops the
+# override so this line takes effect. Using the in-app theme picker will
+# re-create the override -- run `cmux themes clear` again to hand control back.
+theme = light:Catppuccin Mocha,dark:Urple
 minimum-contrast = 1.1
 split-divider-color = #45475a
 

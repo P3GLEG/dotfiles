@@ -89,6 +89,14 @@ fi
 [ -L "$HOME/.config/ghostty/ghostty" ] && rm -f "$HOME/.config/ghostty/ghostty"
 link "$CURRENT_DIR/ghostty/config" "$HOME/.config/ghostty/config"
 
+# cmux keeps its OWN ghostty config in Application Support and that file
+# OVERRIDES ~/.config/ghostty/config. The in-app theme picker writes there,
+# which is why a machine can look different from what this repo says. Drop
+# the override so the dotfiles copy is authoritative. No-op if unset.
+if [ -x /Applications/cmux.app/Contents/Resources/bin/cmux ]; then
+  /Applications/cmux.app/Contents/Resources/bin/cmux themes clear >/dev/null 2>&1 || true
+fi
+
 # 7) cmux (agent workspace manager)
 echo "Configuring cmux..."
 mkdir -p "$HOME/.config/cmux" "$HOME/.claude/hooks" "$HOME/.claude/agent-state" "$HOME/.cache/cmux"

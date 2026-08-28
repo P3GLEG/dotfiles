@@ -22,6 +22,23 @@ and does it need me" without opening it.
 | `rules/cmux-workspace-hygiene.md` | `~/.claude/rules/` | Field-ownership table and the don't-pile-tabs rule, loaded as a global Claude rule |
 | `launchd/com.pegleg.cmux-stall-watch.plist` | `~/Library/LaunchAgents/` | Runs the watchdog at login |
 
+## Where terminal appearance actually comes from
+
+Three files, in increasing precedence. This trips people up, because the
+in-app theme picker silently creates the highest-precedence one:
+
+| File | In git? | Wins? |
+|---|---|---|
+| `~/.config/ghostty/config` (symlink of `ghostty/config` here) | yes | base |
+| `~/Library/Application Support/com.cmuxterm.app/config.ghostty` | **no** | **overrides the above** |
+| `cmux.json` | yes | cmux chrome only (sidebar, rails, pills) -- not terminal colours |
+
+`cmux themes set` writes to the middle one. Because it is outside the repo,
+a theme set through the picker does not follow you to a new machine -- the
+classic "why does it look different over here". Keep font and theme in
+`ghostty/config` and run `cmux themes clear` to hand control back; `cmux
+themes` prints the effective `Source:` so you can always tell which file won.
+
 ## The model
 
 **Repo → group; task → workspace; parallel views of one task → panes;
