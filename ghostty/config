@@ -129,16 +129,13 @@ keybind = unconsumed:shift+page_up=scroll_page_up
 keybind = unconsumed:shift+page_down=scroll_page_down
 keybind = performable:ctrl+c=copy_to_clipboard
 
-# cmd+shift+comma=reload_config is NOT bound here: that is cmux's own
-# reloadConfiguration default, and cmux reloads BOTH configs.
+# cmd+shift+comma=reload_config is NOT bound: that is cmux's own
+# reloadConfiguration default, and cmux reloads BOTH configs anyway.
 #
-#
-# This file used to carry a tmux passthrough block that sent Ctrl-B prefix
-# sequences: cmd+1..9, cmd+d, cmd+shift+d, cmd+w, cmd+t, cmd+shift+enter.
-# Under cmux every one of those collides with a cmux command --
-# selectWorkspaceByNumber, splitRight, splitDown, close, new tab,
-# toggleSplitZoom -- and Ghostty would swallow the key and emit a raw
-# escape sequence into the terminal instead. Workspace switching in
-# particular would simply stop working.
-#
-# Keybindings live in cmux.json under "shortcuts.bindings". Add them there.
+# Nothing else belongs here. This file used to carry a tmux passthrough
+# block sending Ctrl-B prefix sequences for cmd+1..9, cmd+d, cmd+shift+d,
+# cmd+w, cmd+t and cmd+shift+enter. Under cmux each of those shadows a real
+# command -- selectWorkspaceByNumber, splitRight, splitDown, close, new tab,
+# toggleSplitZoom -- and Ghostty would swallow the key and emit a raw escape
+# sequence into the terminal instead, so workspace switching simply stopped
+# working. Add keybindings in cmux.json under "shortcuts.bindings".
