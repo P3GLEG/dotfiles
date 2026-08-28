@@ -75,7 +75,19 @@ link "$CURRENT_DIR/starship.toml" "$HOME/.config/starship.toml"
 
 # 6) Ghostty
 echo "Configuring Ghostty..."
-link "$CURRENT_DIR/ghostty" "$HOME/.config/ghostty"
+# Link the FILE, not the directory. Ghostty creates ~/.config/ghostty on
+# first run, and `ln -snf src dir` on an existing REAL directory silently
+# links INSIDE it (~/.config/ghostty/ghostty) instead of replacing it -- -n
+# only guards a symlink-to-directory. That left the real config untouched
+# and the dotfiles one never in effect.
+mkdir -p "$HOME/.config/ghostty"
+if [ -f "$HOME/.config/ghostty/config" ] && [ ! -L "$HOME/.config/ghostty/config" ]; then
+  cp "$HOME/.config/ghostty/config" "$HOME/.config/ghostty/config.bak.$(date +%Y%m%d%H%M%S)"
+  echo "Backed up existing ghostty config"
+fi
+# Clean up the nested link left by the previous directory-linking behaviour.
+[ -L "$HOME/.config/ghostty/ghostty" ] && rm -f "$HOME/.config/ghostty/ghostty"
+link "$CURRENT_DIR/ghostty/config" "$HOME/.config/ghostty/config"
 
 # 7) cmux (agent workspace manager)
 echo "Configuring cmux..."

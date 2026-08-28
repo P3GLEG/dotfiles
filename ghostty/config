@@ -1,43 +1,33 @@
+# Ghostty config — terminal layer for cmux.
+#
+# cmux embeds Ghostty, so anything Ghostty already does (font, theme,
+# padding, scrollback, shell integration) belongs HERE, not in cmux.json.
+# `cmux reload-config` reloads BOTH this file and ~/.config/cmux/cmux.json.
+#
+# Installed by install.sh as a symlink of this FILE to
+# ~/.config/ghostty/config -- not the directory. Ghostty creates that
+# directory on first run, and linking a directory onto an existing real
+# directory nests the link inside it instead of replacing it.
+
 # ── Font ──────────────────────────────
-font-family = Anonymous Pro
-font-size = 16
-font-thicken = true
-font-thicken-strength = 50
+font-family = Iosevka Nerd Font
+font-size = 14
 adjust-cell-height = 2
 adjust-underline-position = 4
 grapheme-width-method = unicode
 
-# ── Colors (custom deep purple theme) ─
-background = #15152b
-foreground = #ffffff
-selection-background = #380d6a
-selection-foreground = #ffffff
-cursor-color = #ffffff
-cursor-text = #15152b
+# ── Colors ────────────────────────────
+theme = Catppuccin Mocha
 minimum-contrast = 1.1
-palette = 0=#000000
-palette = 1=#e33937
-palette = 2=#3ad900
-palette = 3=#fad000
-palette = 4=#7857fe
-palette = 5=#ff2c70
-palette = 6=#80fcff
-palette = 7=#ffffff
-palette = 8=#5c5c61
-palette = 9=#e33937
-palette = 10=#3ad900
-palette = 11=#fad000
-palette = 12=#6943ff
-palette = 13=#fb94ff
-palette = 14=#80fcff
-palette = 15=#ffffff
+split-divider-color = #45475a
 
 # ── macOS ─────────────────────────────
 macos-option-as-alt = true
-macos-titlebar-style = tabs
 macos-non-native-fullscreen = true
 macos-titlebar-proxy-icon = hidden
 window-colorspace = display-p3
+# macos-titlebar-style is deliberately unset: cmux owns the window chrome
+# and draws its own sidebar/tab UI. Forcing "tabs" fights it.
 
 # ── Window & appearance ───────────────
 window-padding-x = 8
@@ -59,6 +49,7 @@ mouse-hide-while-typing = true
 mouse-scroll-multiplier = 3
 
 # ── Clipboard & selection ─────────────
+# copy-on-select stays false to match terminal.copyOnSelect in cmux.json.
 copy-on-select = false
 clipboard-read = allow
 clipboard-write = allow
@@ -66,10 +57,15 @@ clipboard-trim-trailing-spaces = true
 clipboard-paste-bracketed-safe = true
 
 # ── Shell integration ─────────────────
+# cmux relies on shell integration for cwd tracking, which is what feeds
+# sidebar.showBranchDirectory and the repo badge.
 shell-integration = detect
 shell-integration-features = no-cursor,sudo,title,ssh-env,ssh-terminfo
 
 # ── Scrollback ────────────────────────
+# Agents emit a lot. This is per-surface, so it interacts with cmux's
+# rendererRealization/agentHibernation memory management -- if RAM gets
+# tight with many panes, this is the first number to lower.
 scrollback-limit = 10000000
 
 # ── Working directory ─────────────────
@@ -82,34 +78,15 @@ quick-terminal-screen = main
 quick-terminal-animation-duration = 0.2
 quick-terminal-autohide = true
 
-# ── Keybinds: tmux passthrough ────────
-# (Ctrl+B prefix = \x02; change to \x01 for Ctrl+A)
-keybind = cmd+1=text:\x021
-keybind = cmd+2=text:\x022
-keybind = cmd+3=text:\x023
-keybind = cmd+4=text:\x024
-keybind = cmd+5=text:\x025
-keybind = cmd+6=text:\x026
-keybind = cmd+7=text:\x027
-keybind = cmd+8=text:\x028
-keybind = cmd+9=text:\x029
-keybind = cmd+d=text:\x02\x25
-keybind = cmd+shift+d=text:\x02\x22
-keybind = cmd+w=text:\x02\x78
-keybind = cmd+t=text:\x02\x63
-keybind = cmd+shift+enter=text:\x02\x7a
-
-# ── Keybinds: scrolling fix ──────────
-keybind = unconsumed:shift+page_up=scroll_page_up
-keybind = unconsumed:shift+page_down=scroll_page_down
-
-# ── Keybinds: quality of life ────────
-keybind = performable:ctrl+c=copy_to_clipboard
-keybind = cmd+shift+comma=reload_config
-
-# ── Notifications ─────────────────────
-notify-on-command-finish = unfocused
-notify-on-command-finish-after = 10s
-
-# ── Auto-update ───────────────────────
-auto-update = download
+# ── Keybinds ──────────────────────────
+# NOTHING here, deliberately.
+#
+# This file used to carry a tmux passthrough block that sent Ctrl-B prefix
+# sequences: cmd+1..9, cmd+d, cmd+shift+d, cmd+w, cmd+t, cmd+shift+enter.
+# Under cmux every one of those collides with a cmux command --
+# selectWorkspaceByNumber, splitRight, splitDown, close, new tab,
+# toggleSplitZoom -- and Ghostty would swallow the key and emit a raw
+# escape sequence into the terminal instead. Workspace switching in
+# particular would simply stop working.
+#
+# Keybindings live in cmux.json under "shortcuts.bindings". Add them there.
