@@ -21,17 +21,39 @@ grapheme-width-method = unicode
 # cmux draws the sidebar itself; this sizes it independently of the terminal.
 sidebar-font-size = 10.5
 
-# ── Colors ────────────────────────────
-# Per-appearance themes. `cmux themes set --light X --dark Y` writes this
-# same key into cmux's OWN config at
-#   ~/Library/Application Support/com.cmuxterm.app/config.ghostty
-# which OVERRIDES this file. Keeping it here instead means the theme lives
-# in git and reproduces on a new machine; `cmux themes clear` drops the
-# override so this line takes effect. Using the in-app theme picker will
-# re-create the override -- run `cmux themes clear` again to hand control back.
-theme = light:Catppuccin Mocha,dark:Urple
+# ── Colors: custom deep purple ────────
+# Explicit colours, NOT a `theme = ` name. This is the look actually in use;
+# it had been living outside git in
+#   ~/Library/Application Support/com.mitchellh.ghostty/config.ghostty
+# which is why a fresh machine looked duller. Explicit background/palette
+# keys beat a `theme` name, so this wins wherever it is loaded from.
+#
+# For reference, the named themes this replaces: Urple is #1b1b23 on
+# #877a9b -- a muted grey-purple. This is #15152b on pure #ffffff, which is
+# the crisper contrast worth keeping.
+background = #15152b
+foreground = #ffffff
+selection-background = #380d6a
+selection-foreground = #ffffff
+cursor-color = #ffffff
+cursor-text = #15152b
 minimum-contrast = 1.1
-split-divider-color = #45475a
+palette = 0=#000000
+palette = 1=#e33937
+palette = 2=#3ad900
+palette = 3=#fad000
+palette = 4=#7857fe
+palette = 5=#ff2c70
+palette = 6=#80fcff
+palette = 7=#ffffff
+palette = 8=#5c5c61
+palette = 9=#e33937
+palette = 10=#3ad900
+palette = 11=#fad000
+palette = 12=#6943ff
+palette = 13=#fb94ff
+palette = 14=#80fcff
+palette = 15=#ffffff
 
 # ── macOS ─────────────────────────────
 macos-option-as-alt = true
@@ -90,8 +112,26 @@ quick-terminal-screen = main
 quick-terminal-animation-duration = 0.2
 quick-terminal-autohide = true
 
+# ── Notifications ─────────────────────
+# notify-on-command-finish is deliberately NOT set. The old standalone
+# config had `notify-on-command-finish = unfocused` / `after = 10s`, but
+# cmux already raises turn-complete notifications through its Claude
+# wrapper (notifications.agentTurnComplete in cmux.json) and fans out via
+# notifications.command. Letting Ghostty notify too means every finished
+# agent turn alerts twice.
+
+# auto-update is not set either: cmux ships and updates its own embedded
+# Ghostty, so a standalone updater has nothing to do here.
+
 # ── Keybinds ──────────────────────────
-# NOTHING here, deliberately.
+# Only bindings that cannot collide with a cmux command.
+keybind = unconsumed:shift+page_up=scroll_page_up
+keybind = unconsumed:shift+page_down=scroll_page_down
+keybind = performable:ctrl+c=copy_to_clipboard
+
+# cmd+shift+comma=reload_config is NOT bound here: that is cmux's own
+# reloadConfiguration default, and cmux reloads BOTH configs.
+#
 #
 # This file used to carry a tmux passthrough block that sent Ctrl-B prefix
 # sequences: cmd+1..9, cmd+d, cmd+shift+d, cmd+w, cmd+t, cmd+shift+enter.
