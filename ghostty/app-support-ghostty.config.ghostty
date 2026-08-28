@@ -1,0 +1,10 @@
+# Intentionally minimal. cmux reads this path, and it used to hold the real
+# appearance -- the custom purple palette plus a tmux passthrough keybind
+# block. Because it lives outside the dotfiles repo, a new machine rendered
+# a different (duller) theme, and the tmux binds shadowed cmux commands.
+#
+# All of it now lives in git:
+#   ~/workspace/dotfiles/ghostty/config -> ~/.config/ghostty/config
+#
+# Tracked in dotfiles and symlinked here. Nothing writes this file
+# automatically, so unlike the cmux one the symlink should persist.

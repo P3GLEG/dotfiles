@@ -75,11 +75,21 @@ link "$CURRENT_DIR/starship.toml" "$HOME/.config/starship.toml"
 
 # 6) Ghostty
 echo "Configuring Ghostty..."
+# Ghostty appearance is read from THREE files and the later two override the
+# first. All three are tracked here so a new machine reproduces exactly.
+#
+#   ~/.config/ghostty/config                                  <- base, all settings
+#   ~/Library/.../com.cmuxterm.app/config.ghostty             <- cmux theme picker writes here
+#   ~/Library/.../com.mitchellh.ghostty/config.ghostty        <- cmux reads this too
+#
+# The third one is the trap: it held explicit background/palette keys, and
+# explicit colours beat a `theme` name, so it silently won over the repo
+# config. Keeping all three in git makes the precedence visible.
+#
 # Link the FILE, not the directory. Ghostty creates ~/.config/ghostty on
-# first run, and `ln -snf src dir` on an existing REAL directory silently
-# links INSIDE it (~/.config/ghostty/ghostty) instead of replacing it -- -n
-# only guards a symlink-to-directory. That left the real config untouched
-# and the dotfiles one never in effect.
+# first run, and `ln -snf src dir` on an existing REAL directory links
+# INSIDE it (~/.config/ghostty/ghostty) instead of replacing it -- -n only
+# guards a symlink-to-directory.
 mkdir -p "$HOME/.config/ghostty"
 if [ -f "$HOME/.config/ghostty/config" ] && [ ! -L "$HOME/.config/ghostty/config" ]; then
   cp "$HOME/.config/ghostty/config" "$HOME/.config/ghostty/config.bak.$(date +%Y%m%d%H%M%S)"
@@ -89,13 +99,21 @@ fi
 [ -L "$HOME/.config/ghostty/ghostty" ] && rm -f "$HOME/.config/ghostty/ghostty"
 link "$CURRENT_DIR/ghostty/config" "$HOME/.config/ghostty/config"
 
-# cmux keeps its OWN ghostty config in Application Support and that file
-# OVERRIDES ~/.config/ghostty/config. The in-app theme picker writes there,
-# which is why a machine can look different from what this repo says. Drop
-# the override so the dotfiles copy is authoritative. No-op if unset.
-if [ -x /Applications/cmux.app/Contents/Resources/bin/cmux ]; then
-  /Applications/cmux.app/Contents/Resources/bin/cmux themes clear >/dev/null 2>&1 || true
-fi
+# The two Application Support overrides. Backed up first if they hold real
+# settings, since those would silently beat the repo config.
+for pair in \
+  "com.cmuxterm.app:app-support-cmux.config.ghostty" \
+  "com.mitchellh.ghostty:app-support-ghostty.config.ghostty"
+do
+  bundle="${pair%%:*}"; repo_file="${pair##*:}"
+  dest="$HOME/Library/Application Support/$bundle/config.ghostty"
+  mkdir -p "$(dirname "$dest")"
+  if [ -f "$dest" ] && [ ! -L "$dest" ] && grep -qE '^[a-z][a-z0-9-]*[[:space:]]*=' "$dest"; then
+    cp "$dest" "$dest.bak.$(date +%Y%m%d%H%M%S)"
+    echo "Backed up overriding ghostty config: $dest"
+  fi
+  link "$CURRENT_DIR/ghostty/$repo_file" "$dest"
+done
 
 # 7) cmux (agent workspace manager)
 echo "Configuring cmux..."

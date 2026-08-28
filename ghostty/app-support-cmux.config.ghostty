@@ -1,0 +1,9 @@
+# Tracked in dotfiles and symlinked to
+#   ~/Library/Application Support/com.cmuxterm.app/config.ghostty
+#
+# CAVEAT: `cmux themes set` and the in-app theme picker REPLACE this symlink
+# with a real file, so their writes escape git. Re-running install.sh
+# restores the link (backing up whatever cmux wrote). `cmux themes clear`
+# removes the override so ~/.config/ghostty/config takes effect again.
+#
+# Deliberately empty of settings: appearance lives in dotfiles/ghostty/config.

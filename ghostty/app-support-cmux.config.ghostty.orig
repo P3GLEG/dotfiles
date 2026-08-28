@@ -1,0 +1,13 @@
+sidebar-font-size = 10.5
+# ── Font ──────────────────────────────
+font-family = Anonymous Pro
+font-size = 16
+font-thicken = true
+font-thicken-strength = 50
+adjust-cell-height = 2
+adjust-underline-position = 4
+grapheme-width-method = unicode
+
+# cmux themes start
+theme = light:Catppuccin Mocha,dark:Urple
+# cmux themes end
