@@ -1,0 +1,29 @@
+# Per-folder badge for the cmux sidebar: emoji + color, keyed by REPO NAME.
+# Painted on SessionStart by cmux-agent-status.sh as a "repo" status pill,
+# and applied as the workspace color.
+#
+# Format:  <glob matched against the repo name>  <TAB>  <emoji>  <TAB>  <#hex>
+# First match wins, so put specific patterns above the catch-all.
+# Read on every SessionStart -- no restart needed.
+#
+# The name is resolved via `git rev-parse --git-common-dir`, NOT --show-toplevel,
+# so a worktree at .worktrees/brobot/fix-thing still badges as "brobot".
+
+brobot	🤖	#7A4FD8
+dotfiles	⚙️	#3E4B5E
+claude-code	✨	#4C8DFF
+harness-bench	📊	#1E8449
+mlx	🧠	#8E44AD
+scanner	🔍	#922B21
+tauri-plugin-mcp	🦀	#B7472A
+watch-skill	⌚	#117864
+colorthemes	🎨	#C0392B
+public-pentesting-reports	🛡️	#7B241C
+bluebubbles-server	💬	#1F618D
+bluebubbles-helper	🫧	#2E86C1
+milf_hunter	🗂️	#5D6D7E
+hello	👋	#148F77
+yay	🎉	#D68910
+scratch	🧪	#566573
+workspace	📁	#1A5276
+*	📁	#1A5276

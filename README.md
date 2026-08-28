@@ -20,10 +20,12 @@ bash install.sh
 Notes:
 - The script installs Homebrew packages from `Brewfile` and symlinks configs into your `$HOME`.
 - Ghostty config is symlinked to `$HOME/.config/ghostty`.
+- cmux config is symlinked to `$HOME/.config/cmux/cmux.json`; agent hooks land in `$HOME/.claude/hooks`. Skip the stall watchdog with `WITH_CMUX_WATCHDOG=0 bash install.sh`.
 - For optional Rust toolchain, run: `WITH_RUST=1 bash install.sh`.
 
 ## Contents
 - `zshrc` with Oh My Zsh, autosuggestions, syntax highlighting, and Spaceship theme.
 - `nvim/` using lazy.nvim with LSP, Treesitter, Telescope, and UI tweaks.
 - `tmux.conf` with TPM and sane defaults (truecolor, vi keys, mouse).
+- `cmux/` config for running many concurrent Claude Code agents — sidebar dashboard, lifecycle hooks, stall watchdog. See `cmux/README.md`.
 - `Brewfile` for core CLI tools and Nerd Font.

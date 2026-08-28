@@ -1,0 +1,434 @@
+{
+  "$schema": "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux.schema.json",
+  "schemaVersion": 1,
+
+  // ---------------------------------------------------------------------
+  // cmux config for many concurrent Claude Code agents. Claude Code only:
+  // every other agent integration is explicitly off.
+  //
+  // Managed in ~/workspace/dotfiles/cmux/cmux.json, symlinked by install.sh.
+  // File-managed values override the GUI Settings pane.
+  // Apply:    cmux reload-config      (or Cmd+Shift+,)
+  //
+  // NOTE: `cmux config doctor` validates JSONC SYNTAX ONLY -- never the
+  // schema. After a reload, open Cmd+Shift+P and search "schema": a
+  // "cmux.json Schema Error" row is the only in-app signal that a key was
+  // rejected. Keys under `actions` and `ui` are additionalProperties:true,
+  // so typos there fail silently and no validator will ever catch them.
+  //
+  // Model: one workspace per TASK, not per repo. Repo -> group;
+  // task -> workspace; parallel views of one task -> panes; alternates
+  // within one view -> tabs. Every sidebar feature below renders at
+  // WORKSPACE granularity, so tasks piled into one workspace are invisible.
+  // ---------------------------------------------------------------------
+
+  // --- Sidebar = the dashboard ------------------------------------------
+  // The bet: the sidebar is the "all agents at once" view. Every row is
+  // self-describing, so you never open a workspace to learn what its agent
+  // is doing.
+  //
+  // Field ownership, decided once so nothing overwrites anything else:
+  //   name        -> workspaceAutoNaming (manual renames win permanently)
+  //   description -> written once at spawn, never touched by a hook
+  //   task pill   -> hook, first substantive prompt only
+  //   last prompt -> app.iMessageMode
+  //   status lane -> cmux, auto-inferred, read-only to agents
+  "sidebar": {
+    "showAgentActivity": true,          // spinner on workspaces with a live agent
+    "showNotificationMessage": true,    // latest notification text under the title
+    "notificationMessageLineLimit": 2,  // keep rows compact at 15+ open
+    "wrapWorkspaceTitles": true,        // titles truncated at one line without this
+    "showProgress": true,
+    "showLog": true,
+    "showCustomMetadata": true,         // gates `cmux set-status` pills too -- the
+                                        // agent-written "what am I doing" mechanism
+    "showSSH": true,
+
+    // Despite the name, this key is "Show the workspace working directory"
+    // -- the cwd, not the branch. Branch DETAIL is branchLayout, and PR /
+    // dirty state are the showPullRequests / watchGitStatus keys below.
+    // Keep the cwd: it is how you tell which folder a plain shell is in.
+    "showBranchDirectory": true,
+
+    // The rest of git state stays off. Under one-workspace-per-task the
+    // branch just restates the title, and PR/dirty state is review-time
+    // information, not triage information.
+    "showPullRequests": false,
+    "watchGitStatus": false,
+    "showPorts": false,
+
+    "notificationBadgePosition": "trailing",
+    "hideAllDetails": false,
+
+    // Renders the per-workspace checklist inline instead of behind a
+    // popover. NOTE: this is `cmux todo` -- a USER-owned list -- not
+    // Claude's TodoWrite state. There is no built-in mirror, and TodoWrite
+    // does not currently fire (gated behind CLAUDE_CODE_ENABLE_TODO_TOOLS),
+    // so this stays empty until you populate it by hand.
+    "beta": {
+      "workspaceTodos": {
+        "checklistStyle": "inline"
+      }
+    }
+  },
+
+  // --- Notifications ----------------------------------------------------
+  "notifications": {
+    "agentPermissionPrompt": true,      // the alert you must act on to unblock an agent
+    "agentIdleReminder": true,          // re-ping ~60s later if still awaiting input
+    "unreadPaneRing": true,
+    "paneFlash": true,
+    "dockBadge": true,
+    "showInMenuBar": true,
+
+    // Default false suppresses desktop alerts whenever the cmux window is
+    // focused, which hides the exact signal you want at scale: agent 7
+    // needs you while you are looking at agent 2. true suppresses only the
+    // surface you are actually staring at.
+    "suppressOnlyFocusedSurface": true,
+
+    "sound": "Tink",
+
+    // Fire-and-forget, runs via /bin/sh on every notification with
+    // CMUX_NOTIFICATION_TITLE / _SUBTITLE / _BODY in the environment.
+    // Keep this as the ONLY external fan-out path. cmux's own Claude
+    // wrapper already raises turn-complete notifications, so never add a
+    // `cmux notify` call to a Claude Code Stop hook -- that is the one
+    // change that would produce double alerts.
+    "command": "~/.claude/hooks/cmux-notify-route.sh"
+  },
+
+  // --- App behaviour ----------------------------------------------------
+  "app": {
+    "reorderOnNotification": true,      // float whatever needs attention to the top
+    "commandPaletteSearchesAllSurfaces": true,  // Cmd+Shift+P searches every agent's output
+    "renameSelectsExistingName": true,
+    "confirmQuit": "dirty-only",        // supersedes the legacy app.warnBeforeQuit
+
+    // Floats the workspace AND shows the submitted prompt on its row --
+    // literally "what did I ask this agent to do". Second independent
+    // float trigger alongside reorderOnNotification; if rows feel jumpy,
+    // turn this one off first.
+    "iMessageMode": true,
+
+    // Closing the last tab no longer destroys the workspace's name,
+    // description and color. Removes the main reason to hoard tabs.
+    "keepWorkspaceOpenWhenClosingLastSurface": true,
+    "warnBeforeClosingTab": false,      // pruning tabs should be frictionless
+
+    // Back/Forward should traverse TASKS, not tabs within one workspace.
+    "focusHistoryIncludesPanesAndTabs": false,
+
+    // Identifies agent windows in Cmd-Tab and Mission Control.
+    "windowTitleTemplate": "{activeWorkspace} - {activeDirectory}",
+
+    // Forking a conversation is how you explore two approaches in parallel.
+    // Sending the fork to its own workspace keeps it visible in the
+    // dashboard instead of buried as a split inside the parent.
+    "forkConversationDefaultDestination": "newWorkspace",
+
+    "workspaceInheritWorkingDirectory": true,
+    "openSupportedFilesInCmux": true,
+    "openMarkdownInCmuxViewer": true    // agents write plans as .md constantly
+  },
+
+  // --- Terminal / agent lifecycle ---------------------------------------
+  "terminal": {
+    "autoResumeAgentSessions": true,    // agent panes reopen and resume after relaunch
+
+    // Reclaims RAM from parked agents by killing the process and keeping
+    // the saved session. Only touches agents that are idle, off-screen,
+    // above the live limit, and unchanged through both the idle window and
+    // a ~60s confirmation settle; needs-input agents are never hibernated.
+    // Stock maxLiveTerminals is 12; 16 on a 128 GB box keeps more agents
+    // warm than stock rather than fewer.
+    "agentHibernation": {
+      "enabled": true,
+      "idleSeconds": 900,
+      "maxLiveTerminals": 16
+    },
+
+    // The other half, and the one that matters more. Terminal memory at
+    // scale is mostly GPU: IOSurface/IOAccelerator buffers, one set per
+    // live renderer. This releases the Metal renderer of an off-screen
+    // terminal while keeping the process and scrollback alive, rebuilding
+    // instantly on revisit. Non-destructive, on by default -- but the stock
+    // maxWarmRenderers of 1 means every switch past the last tab rebuilds.
+    "rendererRealization": {
+      "enabled": true,
+      "idleSeconds": 60,
+      "maxWarmRenderers": 10
+    },
+
+    "showScrollBar": true,
+    "copyOnSelect": false,
+
+    // TextBox: a rich input above the terminal. Shown but not focused, so
+    // keystrokes still go to Claude by default.
+    "showTextBoxOnNewTerminals": false,
+    "focusTextBoxOnNewTerminals": false,
+    "textBoxMaxLines": 10,
+
+    // Shift-Tab cycles these on the submit button. "Spawn Claude" launches
+    // a fresh agent in the current surface seeded with whatever is in the
+    // box, instead of typing into whatever is already running there.
+    // {{prompt}} is the only supported placeholder and is required.
+    "textBoxSubmitActions": [
+      {
+        "id": "spawn-claude",
+        "title": "New Claude with this prompt",
+        "kind": "commandTemplate",
+        "commandTemplate": "claude {{prompt}}",
+        "systemImage": "sparkle",
+        "backgroundColorHex": "#4C8DFF"
+      },
+      {
+        "id": "spawn-claude-plan",
+        "title": "New Claude in plan mode",
+        "kind": "commandTemplate",
+        "commandTemplate": "claude --permission-mode plan {{prompt}}",
+        "systemImage": "list.bullet.rectangle",
+        "backgroundColorHex": "#7D6608"
+      }
+    ]
+  },
+
+  // --- Automation -------------------------------------------------------
+  "automation": {
+    "claudeCodeIntegration": true,      // status pill, active/idle state, and
+                                        // session->surface mapping in
+                                        // ~/.cmuxterm/claude-hook-sessions.json
+                                        // Injected by the cmux Claude wrapper --
+                                        // there is NO `cmux hooks setup claude`.
+
+    // Claude Code only. These all default to true and install hooks for
+    // agents that are never launched here.
+    "ampIntegration": false,
+    "cursorIntegration": false,
+    "geminiIntegration": false,
+    "kiroIntegration": false,
+
+    // Empty = let cmux resolve the binary from the launch environment,
+    // which is what it already does correctly (claude-hook-sessions.json
+    // reports source: "environment"). Left unpinned so this file stays
+    // portable; fill it only if session resume actually breaks.
+    //
+    // If you ever do pin it: DO NOT use `which claude`. Inside a cmux pane
+    // that returns a PER-SURFACE wrapper shim under
+    // $TMPDIR/cmux-cli-shims/<CMUX_SURFACE_ID>/claude -- a different path
+    // for every tab, reaped on reboot. Pinning that would CAUSE the stale-
+    // path resume failure this key exists to prevent. The correct value is
+    // the native-installer symlink (~/.local/bin/claude), whose target
+    // rotates safely on upgrade. Confirm with:
+    //   echo "$CMUX_AGENT_LAUNCH_EXECUTABLE"
+    "claudeBinaryPath": "",
+
+    // AI titles, 2-5 words, refreshed as the topic shifts. Runs as an async
+    // Stop hook so it never blocks the agent, and MANUAL RENAMES WIN
+    // PERMANENTLY -- that bounded downside is what makes it safe.
+    // This is the feature that most directly answers "what was this doing".
+    "workspaceAutoNaming": true,
+    "autoNamingAgent": "claude",
+
+    "suppressSubagentNotifications": true,  // Task subagents counted in Feed, not popped
+
+    // Kept explicitly at its default: this is a security boundary, and an
+    // explicit value survives GUI-persisted prefs and future default drift.
+    // Note it gates caller ATTRIBUTION, not access -- the socket is 0600,
+    // so uid is the real control. Callers outside cmux still work but lose
+    // the implicit --workspace default and must pass targets explicitly.
+    "socketControlMode": "cmuxOnly"
+  },
+
+  // --- Actions: one-click Claude launchers -------------------------------
+  // Shapes verified against the app's own decoder, NOT the schema (which
+  // leaves this object open, so typos fail silently rather than erroring).
+  //   - the key is `title`, NOT `label`
+  //   - `icon` is an OBJECT, never a bare string
+  //   - type "command" is better supported than type "agent"; `agent` buys
+  //     only a default icon and takes args as a single string
+  // Generate canonical blocks with: right-click + -> Save Workspace as
+  // Layout (it preserves these comments).
+  "actions": {
+    // The primary spawn path: pick a repo, name the task, get a worktree +
+    // a named workspace with Claude already in it. This is what makes a new
+    // WORKSPACE cheaper to reach than a new tab, which is the whole point.
+    // bash -lc because cmux runs commands through a non-interactive shell
+    // that never sources ~/.zshrc.
+    "task.new": {
+      "type": "command",
+      "title": "New Task Workspace",
+      "subtitle": "Pick a repo, name the task, spawn a worktree workspace",
+      "keywords": ["task", "new", "workspace", "worktree", "repo", "spawn"],
+      "command": "bash -lc '~/.config/cmux/new-task.sh'",
+      "target": "newTabInCurrentPane",
+      "icon": { "type": "symbol", "name": "rectangle.stack.badge.plus" }
+    },
+
+    "claude": {
+      "type": "command",
+      "title": "Claude",
+      "subtitle": "Claude Code in a tab of the current workspace",
+      "command": "claude",
+      "target": "newTabInCurrentPane",
+      "icon": { "type": "symbol", "name": "brain.head.profile" }
+    },
+    "claude-plan": {
+      "type": "command",
+      "title": "Claude (plan)",
+      "subtitle": "Plan-mode Claude in a tab of the current workspace",
+      "command": "claude --permission-mode plan",
+      "target": "newTabInCurrentPane",
+      "icon": { "type": "symbol", "name": "list.bullet.rectangle" }
+    },
+    "claude-yolo": {
+      "type": "command",
+      "title": "Claude (skip permissions)",
+      "command": "claude --dangerously-skip-permissions",
+      "target": "newTabInCurrentPane",
+      "confirm": true,
+      "icon": { "type": "symbol", "name": "bolt.fill" }
+    }
+  },
+
+  "ui": {
+    // No surfaceTabBar buttons on purpose. A launcher in the tab bar puts
+    // spawn affordances exactly where they create MORE TABS in the current
+    // workspace -- the failure mode this whole config is fixing. Launchers
+    // live in the plus-button menu only, so a new workspace is always
+    // cheaper to reach than a new tab.
+    "newWorkspace": {
+      // The plain + button runs the task picker. Blank Terminal is still one
+      // right-click away. If the picker ever breaks, the + button will look
+      // dead -- remove this line to fall back to a blank terminal.
+      "action": "task.new",
+      "menuSectionOrder": "customFirst",
+      "contextMenu": [
+        "task.new",
+        { "type": "separator" },
+        "claude",
+        "claude-plan",
+        "claude-yolo",
+        { "type": "separator" },
+        "cmux.newTerminal"
+      ]
+    }
+  },
+
+  // --- Visual grouping --------------------------------------------------
+  // NOTE: byCwd does NOT create groups -- it only styles a group that
+  // already exists, matching the ANCHOR workspace's cwd. Create groups by
+  // hand (Ctrl+Cmd+G) or via `cmux workspace-group create`. Unread badges
+  // aggregate onto a collapsed header, which is how 15 rows become 4.
+  "workspaceGroups": {
+    // Longest match wins. Keys with * or ? are fnmatch globs (with ~
+    // expanded); others are literal path prefixes -- so a plain "~/foo"
+    // key would never match. The trailing glob gives new projects a sane
+    // default instead of nothing.
+    "byCwd": {
+      // Main checkouts. Glob form (trailing *) rather than an absolute path:
+      // byCwd expands ~ ONLY on keys containing * or ?, so "~/workspace/x"
+      // as a plain prefix would silently never match. The * also lets the
+      // entry cover subdirectories of the checkout.
+      "~/workspace/dotfiles*": { "color": "#3E4B5E", "icon": "gearshape.fill" },
+      "~/workspace/claude-code*": { "color": "#4C8DFF", "icon": "sparkle" },
+      "~/workspace/brobot*": { "color": "#7A4FD8", "icon": "cpu.fill" },
+      "~/workspace/scanner*": {
+        "color": "#922B21",
+        "icon": "shield.lefthalf.filled",
+        "contextMenu": ["task.new", "claude-plan", "claude"]  // no yolo in the scanner repo
+      },
+
+      // Task worktrees. Without these the per-repo colour, icon AND the
+      // no-yolo context menu are all DEAD for exactly the workspaces
+      // new-task.sh creates, because byCwd matches the anchor workspace's
+      // cwd and .worktrees/<repo>/<slug> is not a prefix of the main path.
+      "~/workspace/.worktrees/dotfiles/*": { "color": "#3E4B5E", "icon": "gearshape.fill" },
+      "~/workspace/.worktrees/claude-code/*": { "color": "#4C8DFF", "icon": "sparkle" },
+      "~/workspace/.worktrees/brobot/*": { "color": "#7A4FD8", "icon": "cpu.fill" },
+      "~/workspace/.worktrees/scanner/*": {
+        "color": "#922B21",
+        "icon": "shield.lefthalf.filled",
+        "contextMenu": ["task.new", "claude-plan", "claude"]
+      },
+      "~/workspace/.worktrees/*": { "color": "#1A5276", "icon": "folder.badge.gearshape" },
+      "~/workspace/*": { "color": "#1A5276", "icon": "folder.fill" }
+    }
+  },
+
+  // --- Review: the actual bottleneck ------------------------------------
+  "diffViewer": {
+    "defaultLayout": "split"
+  },
+
+  "markdown": {
+    "maxWidth": 900
+  },
+
+  // --- Canvas: the birds-eye view ---------------------------------------
+  // Ctrl+Cmd+C toggle canvas, Ctrl+Cmd+T tidy into a grid,
+  // Ctrl+Cmd+O overview zoom, Ctrl+Cmd+R reveal focused pane.
+  "canvas": {
+    "paneGap": 12,
+    "snappingEnabled": true
+  },
+
+  "shortcuts": {
+    "showModifierHoldHints": true,
+    "bindings": {
+      // --- Triage ---
+      // The status lane (todo/working/needs-attention/review/done) is
+      // INFERRED automatically from live signals -- needs-attention fires
+      // by itself the moment an agent blocks on you. Nothing to configure.
+      "markOldestUnreadAndJumpNext": "cmd+ctrl+j",
+      "jumpToUnread": "cmd+ctrl+u",
+      "toggleUnread": "cmd+ctrl+shift+u",
+      "cycleWorkspaceStatus": "cmd+ctrl+l",  // "lane". Moved off cmd+ctrl+s,
+                                             // which is saveLayoutTemplate (^CmdS),
+                                             // the Save-as-Layout keystroke.
+      "markWorkspaceDone": "cmd+ctrl+d",
+      "switchRightSidebarToFeed": "cmd+ctrl+e",  // Feed = the cross-workspace
+                                                 // "who needs me" queue;
+                                                 // double-click a row to jump
+      // openDiffViewer: unbound here, uses its shipped ctrl+cmd+shift+D.
+      // It was on cmd+shift+g, which is groupSelectedWorkspaces. The original
+      // comment claimed a clash with cmd+shift+d, but that is splitDown --
+      // openDiffViewer's default has always been ctrl+cmd+shift+D. No conflict.
+
+      // --- Pane focus, vim directions ---
+      "focusLeft": "cmd+opt+h",
+      "focusDown": "cmd+opt+j",
+      "focusUp": "cmd+opt+k",
+      "focusRight": "cmd+opt+l",
+
+      // --- Splits ---
+      "equalizeSplits": "cmd+shift+=",       // default is ctrl+cmd+shift+=
+
+      // --- Surfaces ---
+      "moveSurfaceLeft": "cmd+opt+shift+[",
+      "moveSurfaceRight": "cmd+opt+shift+]",
+
+      // --- Terminal ---
+      "toggleTerminalCopyMode": "cmd+shift+u",
+      "clearScreenKeepScrollback": "cmd+k",  // default is cmd+shift+k
+      // reloadConfiguration: unbound here, uses its shipped cmd+shift+, .
+      // It was on cmd+shift+r, which is renameWorkspace -- the single most
+      // useful key for this workflow.
+
+      // --- Diff viewer, bare vim keys ---
+      "diffViewerScrollDown": "j",
+      "diffViewerScrollUp": "k",
+      "diffViewerScrollHalfPageDown": "ctrl+d",
+      "diffViewerScrollHalfPageUp": "ctrl+u",
+      "diffViewerScrollToTop": ["g", "g"],
+      "diffViewerScrollToBottom": "shift+g",
+      "diffViewerNextFile": "]",
+      "diffViewerPreviousFile": "[",
+      "diffViewerOpenFileSearch": "cmd+p"
+    },
+
+    "when": {
+      "selectWorkspaceByNumber": "!sidebarFocus"
+    }
+  }
+}

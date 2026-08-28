@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.pegleg.cmux-stall-watch</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>__HOME__/.claude/hooks/cmux-stall-watch.sh</string>
+  </array>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>CMUX_STALL_THRESHOLD</key>
+    <string>600</string>
+    <key>CMUX_STALL_INTERVAL</key>
+    <string>60</string>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>__HOME__/.cache/cmux/stall-watch.log</string>
+  <key>StandardErrorPath</key>
+  <string>__HOME__/.cache/cmux/stall-watch.err</string>
+
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>LowPriorityIO</key>
+  <true/>
+</dict>
+</plist>

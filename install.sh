@@ -77,7 +77,58 @@ link "$CURRENT_DIR/starship.toml" "$HOME/.config/starship.toml"
 echo "Configuring Ghostty..."
 link "$CURRENT_DIR/ghostty" "$HOME/.config/ghostty"
 
-# 7) Optional Rust toolchain
+# 7) cmux (agent workspace manager)
+echo "Configuring cmux..."
+mkdir -p "$HOME/.config/cmux" "$HOME/.claude/hooks" "$HOME/.claude/agent-state" "$HOME/.cache/cmux"
+
+# Back up an existing real cmux.json before replacing it with the symlink.
+if [ -f "$HOME/.config/cmux/cmux.json" ] && [ ! -L "$HOME/.config/cmux/cmux.json" ]; then
+  cp "$HOME/.config/cmux/cmux.json" "$HOME/.config/cmux/cmux.json.bak.$(date +%Y%m%d%H%M%S)"
+  echo "Backed up existing cmux.json"
+fi
+link "$CURRENT_DIR/cmux/cmux.json" "$HOME/.config/cmux/cmux.json"
+
+# Claude Code lifecycle hook + helpers live under ~/.claude/hooks so the
+# paths in settings.json and the launchd plist stay stable.
+link "$CURRENT_DIR/cmux/hooks/cmux-agent-status.sh" "$HOME/.claude/hooks/cmux-agent-status.sh"
+link "$CURRENT_DIR/cmux/bin/cmux-stall-watch.sh"    "$HOME/.claude/hooks/cmux-stall-watch.sh"
+link "$CURRENT_DIR/cmux/bin/cmux-notify-route.sh"   "$HOME/.claude/hooks/cmux-notify-route.sh"
+
+# Task spawner + its per-repo badge map. cmux.json references new-task.sh by
+# the ~/.config/cmux path, so the symlink location is load-bearing.
+link "$CURRENT_DIR/cmux/bin/new-task.sh"     "$HOME/.config/cmux/new-task.sh"
+link "$CURRENT_DIR/cmux/repo-badges.tsv"     "$HOME/.config/cmux/repo-badges.tsv"
+
+# Workspace-hygiene rules, loaded by Claude Code as a global rule file.
+mkdir -p "$HOME/.claude/rules"
+link "$CURRENT_DIR/cmux/rules/cmux-workspace-hygiene.md" "$HOME/.claude/rules/cmux-workspace-hygiene.md"
+
+# Merge hook entries into ~/.claude/settings.json (not symlinked: it holds
+# personal permissions/model/MCP state). Idempotent.
+if [ -f "$HOME/.claude/settings.json" ]; then
+  python3 "$CURRENT_DIR/cmux/bin/install-claude-hooks.py" || true
+else
+  echo "Skipping Claude hook wiring: ~/.claude/settings.json not found"
+fi
+
+# Stall watchdog as a launchd agent. Set WITH_CMUX_WATCHDOG=0 to skip.
+if [ "${WITH_CMUX_WATCHDOG:-1}" = "1" ]; then
+  CMUX_PLIST="$HOME/Library/LaunchAgents/com.pegleg.cmux-stall-watch.plist"
+  mkdir -p "$HOME/Library/LaunchAgents"
+  sed "s|__HOME__|$HOME|g" "$CURRENT_DIR/cmux/launchd/com.pegleg.cmux-stall-watch.plist" > "$CMUX_PLIST"
+  launchctl bootout "gui/$(id -u)/com.pegleg.cmux-stall-watch" 2>/dev/null || true
+  launchctl bootstrap "gui/$(id -u)" "$CMUX_PLIST" 2>/dev/null \
+    && echo "Loaded cmux stall watchdog" \
+    || echo "Could not load stall watchdog (load it later with: launchctl bootstrap gui/$(id -u) $CMUX_PLIST)"
+fi
+
+# Apply without restarting cmux (no-op if cmux is not running).
+if command -v cmux >/dev/null 2>&1 || [ -x /Applications/cmux.app/Contents/Resources/bin/cmux ]; then
+  "${CMUX_BIN:-/Applications/cmux.app/Contents/Resources/bin/cmux}" reload-config >/dev/null 2>&1 \
+    && echo "Reloaded cmux config" || true
+fi
+
+# 8) Optional Rust toolchain
 if [ "${WITH_RUST:-0}" = "1" ]; then
   echo "Installing Rust toolchain (WITH_RUST=1)..."
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y || true
